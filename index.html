@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TG Clicker with Admin</title>
-    <!-- Подключаем Telegram Web App API -->
+    <title>TG Clicker Elite Edition</title>
     <script src="https://telegram.org"></script>
     <style>
         :root {
-            --bg-color: #1a1a2e;
-            --text-color: #ffffff;
-            --accent-color: #e94560;
-            --panel-bg: #16213e;
+            --bg-color: #0b0c10;
+            --text-color: #c5c6c7;
+            --accent-color: #66fcf1;
+            --panel-bg: #1f2833;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -24,172 +23,164 @@
             align-items: center;
             user-select: none;
         }
-        .container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        h1 { font-size: 2.5rem; margin: 10px 0; color: #4ecca3; }
-        .score-box { background: var(--panel-bg); padding: 15px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .stat-label { font-size: 0.9rem; color: #888; text-transform: uppercase; }
+        .container { width: 100%; max-width: 400px; text-align: center; }
+        h1 { font-size: 2.7rem; margin: 10px 0; color: var(--accent-color); text-shadow: 0 0 10px rgba(102,252,241,0.3); }
+        .score-box { background: var(--panel-bg); padding: 20px; border-radius: 20px; margin-bottom: 25px; border: 1px solid #45f3ff22; }
+        .stat-label { font-size: 0.85rem; color: #66fcf1; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* Кнопка Монеты */
         .coin-btn {
-            width: 200px;
-            height: 200px;
+            width: 210px;
+            height: 210px;
             border-radius: 50%;
-            background: radial-gradient(circle, #f39c12, #d35400);
-            border: 8px solid #f1c40f;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            background: radial-gradient(circle, #66fcf1, #45a29e);
+            border: 6px solid #0b0c10;
+            box-shadow: 0 0 25px rgba(102,252,241,0.5);
             cursor: pointer;
-            margin: 20px auto;
+            margin: 30px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 5rem;
+            font-size: 5.5rem;
             transition: transform 0.05s ease;
         }
-        .coin-btn:active { transform: scale(0.95); }
+        .coin-btn:active { transform: scale(0.93); }
 
-        /* Прокачка */
-        .upgrade-section { background: var(--panel-bg); padding: 15px; border-radius: 15px; width: 100%; box-sizing: border-box; }
+        .upgrade-section { background: var(--panel-bg); padding: 15px; border-radius: 20px; width: 100%; box-sizing: border-box; }
         .upgrade-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255,255,255,0.05);
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
         .upgrade-info { text-align: left; }
-        .upgrade-name { font-weight: bold; }
-        .upgrade-desc { font-size: 0.8rem; color: #aaa; }
+        .upgrade-name { font-weight: bold; color: #fff; }
+        .upgrade-desc { font-size: 0.8rem; color: #888; margin-top: 2px; }
         .btn-buy {
             background: var(--accent-color);
-            color: white;
+            color: #0b0c10;
             border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .btn-buy:disabled { background: #555; cursor: not-allowed; }
+        .btn-buy:disabled { background: #333; color: #777; cursor: not-allowed; }
 
-        /* Админка */
-        .admin-trigger { margin-top: 30px; font-size: 0.8rem; color: #444; cursor: pointer; }
+        .admin-trigger { margin-top: 40px; font-size: 0.75rem; color: #223; cursor: pointer; letter-spacing: 1px; }
         .admin-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             justify-content: center;
             align-items: center;
             z-index: 100;
         }
-        .admin-box { background: #222; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #444; }
-        .admin-box input { width: 90%; padding: 10px; margin: 10px 0; background: #333; border: 1px solid #555; color: white; border-radius: 5px; text-align: center; }
-        .admin-box button { background: #4ecca3; color: black; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin: 5px; }
-        .admin-box .btn-close { background: #e94560; color: white; }
+        .admin-box { background: #111; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #333; }
+        .admin-box input { width: 90%; padding: 12px; margin: 15px 0; background: #222; border: 1px solid #444; color: white; border-radius: 8px; text-align: center; font-size: 1rem; }
+        .admin-box button { background: var(--accent-color); color: black; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 8px; width: 100%; box-sizing: border-box; }
+        .admin-box .btn-close { background: #1f2833; color: #fff; }
+        
+        .status-alert { color: #ff4d4d; font-weight: bold; margin-top: 10px; display: none; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Баланс монет -->
         <div class="score-box">
-            <div class="stat-label">Баланс</div>
+            <div class="stat-label">Твой Счет</div>
             <h1 id="balance">0</h1>
-            <div style="font-size: 0.85rem; color: #aaa;">Прибыль за клик: +<span id="click-power">1</span></div>
+            <div style="font-size: 0.85rem; color: #888;" id="status-line">Эффективность клика: +<span id="click-power">1</span></div>
+            <div class="status-alert" id="scam-alert">⚠️ СИСТЕМА ОБНАРУЖИЛА ВЗЛОМ. АКТИВИРОВАН ШТРАФ!</div>
         </div>
 
-        <!-- Главная кнопка-кликер -->
-        <div class="coin-btn" id="click-btn">🪙</div>
+        <div class="coin-btn" id="click-btn">⚡</div>
 
-        <!-- Блок улучшений -->
         <div class="upgrade-section">
-            <h3>Магазин прокачки</h3>
+            <h3 style="margin-top:0; color:#fff;">Улучшения производства</h3>
             
-            <!-- Прокачка 1: Обычный клик (Макс 100.000) -->
             <div class="upgrade-card">
                 <div class="upgrade-info">
-                    <div class="upgrade-name">Сила клика</div>
-                    <div class="upgrade-desc" id="click-lvl-desc">Макс. лимит: 100 000</div>
+                    <div class="upgrade-name">Главный Кликер</div>
+                    <div class="upgrade-desc" id="click-lvl-desc">Предел: 100 000</div>
                 </div>
-                <button class="btn-buy" id="buy-click-btn">Купить (-10)</button>
+                <button class="btn-buy" id="buy-click-btn">Купить</button>
             </div>
 
-            <!-- Прокачка 2: Множитель "9 Штучек" -->
             <div class="upgrade-card">
                 <div class="upgrade-info">
-                    <div class="upgrade-name">🔥 9 Штучек (Множитель)</div>
-                    <div class="upgrade-desc" id="mult-lvl-desc">Разгоняет доход до 1 000 000</div>
+                    <div class="upgrade-name">🔥 Модуль «9 Штучек»</div>
+                    <div class="upgrade-desc" id="mult-lvl-desc">Разгон до 1 000 000</div>
                 </div>
-                <button class="btn-buy" id="buy-mult-btn" disabled>Купить (-500)</button>
+                <button class="btn-buy" id="buy-mult-btn" disabled>Купить</button>
             </div>
         </div>
 
-        <!-- Скрытая кнопка входа в админку -->
-        <div class="admin-trigger" onclick="openAdminModal()">⚙️ Панель управления</div>
+        <div class="admin-trigger" onclick="openAdminModal()">⚙️ SECURE TERMINAL</div>
     </div>
 
-    <!-- Модальное окно Админки -->
+    <!-- Панель управления -->
     <div class="admin-modal" id="admin-modal">
+        <!-- Окно авторизации -->
         <div class="admin-box" id="auth-box">
-            <h3>Вход в админку</h3>
-            <input type="password" id="admin-pass" placeholder="Введи секретный пароль">
-            <button onclick="checkPassword()">Войти</button>
-            <button class="btn-close" onclick="closeAdminModal()">Отмена</button>
+            <h3 style="color:#fff; margin:0;">Вход в систему</h3>
+            <p style="font-size:0.8rem; color:#666;">Доступ только для разработчика</p>
+            <input type="password" id="admin-pass" placeholder="Введите ключ доступа">
+            <button onclick="checkPassword()">ПОДТВЕРДИТЬ</button>
+            <button class="btn-close" onclick="closeAdminModal()">ОТМЕНА</button>
         </div>
         
+        <!-- Официальная админка для ТЕБЯ -->
         <div class="admin-box" id="control-box" style="display: none;">
-            <h3>👑 Админ-панель</h3>
-            <p>Управление балансом игрока</p>
-            <input type="number" id="custom-balance" placeholder="Новый баланс">
-            <button onclick="setAdminBalance()">Применить</button>
-            <button onclick="resetGame()" style="background:#e94560; color:white;">Сбросить игру</button>
-            <button class="btn-close" onclick="closeAdminModal()">Выйти</button>
+            <h3 style="color:#66fcf1; margin:0;">👑 ПАНЕЛЬ РАЗРАБОТЧИКА</h3>
+            <p style="font-size:0.8rem; color:#888;">Официальный доступ подтвержден</p>
+            <input type="number" id="custom-balance" placeholder="Установить баланс монет">
+            <button onclick="setAdminBalance()">ЗАЧИСЛИТЬ МАНУ</button>
+            <button onclick="activateGodMode()" style="background:#e94560; color:white;">🔥 МАКСИМУМ (1 МЛН/КЛИК)</button>
+            <button class="btn-close" onclick="closeAdminModal()">ВЫЙТИ</button>
         </div>
     </div>
 
     <script>
-        // Инициализация Telegram WebApp
         if (window.Telegram && window.Telegram.WebApp) {
-            const tg = window.Telegram.WebApp;
-            tg.expand();
-            tg.ready();
+            window.Telegram.WebApp.expand();
         }
 
-        // Логика и состояние игры
+        // Состояние
         let gameState = {
             balance: 0,
-            clickLvl: 1,      // Уровень обычной прокачки
-            multLvl: 1        // Уровень прокачки "9 штучек"
+            clickLvl: 1,
+            multLvl: 1,
+            isScammedUser: false // Метка для "охов"
         };
 
-        // Загрузка сохранений из памяти браузера
-        if (localStorage.getItem('tg_clicker_save')) {
-            gameState = JSON.parse(localStorage.getItem('tg_clicker_save'));
+        if (localStorage.getItem('tg_elite_clicker_save')) {
+            gameState = JSON.parse(localStorage.getItem('tg_elite_clicker_save'));
         }
 
-        // Константы и лимиты
         const LIMIT_STANDARD = 100000;
         const LIMIT_ULTIMATE = 1000000;
-        const ADMIN_PASSWORD = "Элдар 3 2 2 8 Ориго";
+        const MASTER_PASSWORD = "Элдар 3 2 2 8 Ориго";
 
-        // Расчет параметров на основе уровней
         function getClickPower() {
-            // Базовый клик растет с уровнем клика
-            let base = gameState.clickLvl;
-            // Если вкачан множитель "9 штучек", он умножает базовый доход
-            let power = base * gameState.multLvl;
-            
-            // Если всё прокачано на максимум, активируется супер-режим на 1 000 000 за клик
+            // Если включен режим наказания — клик забирает деньги
+            if (gameState.isScammedUser) {
+                return -Math.max(50, gameState.clickLvl * 10); 
+            }
+
+            // Максимальный буст
             if (gameState.clickLvl >= 10 && gameState.multLvl >= 5) {
                 return LIMIT_ULTIMATE;
             }
+
+            let base = gameState.clickLvl;
+            let power = base * gameState.multLvl;
             
-            // Ограничение обычной прокачки (без 9 штучек)
             if (gameState.multLvl === 1 && power > LIMIT_STANDARD) {
                 return LIMIT_STANDARD;
             }
@@ -197,19 +188,29 @@
             return power;
         }
 
-        function getClickCost() { return gameState.clickLvl * 15; }
-        function getMultCost() { return gameState.multLvl * 300; }
+        function getClickCost() { return gameState.clickLvl * 20; }
+        function getMultCost() { return gameState.multLvl * 400; }
 
-        // Обновление интерфейса
         function updateUI() {
             const currentPower = getClickPower();
+            
             document.getElementById('balance').innerText = Math.floor(gameState.balance).toLocaleString();
+            
+            if (gameState.isScammedUser) {
+                document.getElementById('click-power').innerText = currentPower.toLocaleString();
+                document.getElementById('scam-alert').style.display = 'block';
+                document.getElementById('status-line').style.color = '#ff4d4d';
+                document.getElementById('buy-click-btn').disabled = true;
+                document.getElementById('buy-mult-btn').disabled = true;
+                return;
+            }
+
             document.getElementById('click-power').innerText = currentPower.toLocaleString();
 
-            // Кнопка Силы Клика
+            // Кнопка 1
             const clickCost = getClickCost();
             if (gameState.clickLvl >= 10) {
-                document.getElementById('click-lvl-desc').innerText = `Уровень: МАКС (База)`;
+                document.getElementById('click-lvl-desc').innerText = `Уровень: МАКС`;
                 document.getElementById('buy-click-btn').innerText = `МАКС`;
                 document.getElementById('buy-click-btn').disabled = true;
             } else {
@@ -218,22 +219,10 @@
                 document.getElementById('buy-click-btn').disabled = gameState.balance < clickCost;
             }
 
-            // Кнопка Множителя "9 Штучек"
+            // Кнопка 2
             const multCost = getMultCost();
-            // Разрешаем покупать "9 штучек" только если обычный клик уже развит (например, выше 3 уровня)
             if (gameState.multLvl >= 5) {
-                document.getElementById('mult-lvl-desc').innerText = `🔥 ВСЁ НА МАКСИМУМЕ! (1 МЛН/клик)`;
+                document.getElementById('mult-lvl-desc').innerText = `🔥 1 000 000 ЗА КЛИК!`;
                 document.getElementById('buy-mult-btn').innerText = `МАКС`;
                 document.getElementById('buy-mult-btn').disabled = true;
-            } else {
-                document.getElementById('mult-lvl-desc').innerText = `Множитель: x${gameState.multLvl} (Финал: 1млн)`;
-                document.getElementById('buy-mult-btn').innerText = `-${multCost}`;
-                // Разблокируется, если хватает денег
-                document.getElementById('buy-mult-btn').disabled = gameState.balance < multCost;
-            }
-
-            // Автоматическое сохранение
-            localStorage.setItem('tg_clicker_save', JSON.stringify(gameState));
-        }
-
-Используйте код с осторожностью.// Клик по монетеdocument.getElementById('click-btn').addEventListener('click', () => {gameState.balance += getClickPower();updateUI();});// Покупка Силы Кликаdocument.getElementById('buy-click-btn').addEventListener('click', () => {const cost = getClickCost();if (gameState.balance >= cost && gameState.clickLvl < 10) {gameState.balance -= cost;gameState.clickLvl++;updateUI();}});// Покупка "9 Штучек"document.getElementById('buy-mult-btn').addEventListener('click', () => {const cost = getMultCost();if (gameState.balance >= cost && gameState.multLvl < 5) {gameState.balance -= cost;gameState.multLvl++;updateUI();}});/* --- ЛОГИКА АДМИНКИ --- */function openAdminModal() {document.getElementById('admin-modal').style.display = 'flex';document.getElementById('auth-box').style.display = 'block';document.getElementById('control-box').style.display = 'none';document.getElementById('admin-pass').value = '';}function closeAdminModal() {document.getElementById('admin-modal').style.display = 'none';}function checkPassword() {const inputPass = document.getElementById('admin-pass').value;if (inputPass === ADMIN_PASSWORD) {document.getElementById('auth-box').style.display = 'none';document.getElementById('control-box').style.display = 'block';document.getElementById('custom-balance').value = gameState.balance;} else {alert('Неверный пароль администратора!');}}function setAdminBalance() {const newBal = parseInt(document.getElementById('custom-balance').value);if (!isNaN(newBal) && newBal >= 0) {gameState.balance = newBal;updateUI();alert('Баланс успешно изменен!');closeAdminModal();}}function resetGame() {if (confirm('Точно сбросить весь прогресс игры?')) {gameState = { balance: 0, clickLvl: 1, multLvl: 1 };updateUI();closeAdminModal();}}// Первый запускupdateUI();
+            } else {document.getElementById('mult-lvl-desc').innerText = Множитель: x${gameState.multLvl};document.getElementById('buy-mult-btn').innerText = -${multCost};document.getElementById('buy-mult-btn').disabled = gameState.balance < multCost;}localStorage.setItem('tg_elite_clicker_save', JSON.stringify(gameState));}// Кликиdocument.getElementById('click-btn').addEventListener('click', () => {gameState.balance += getClickPower();updateUI();});// Покупкиdocument.getElementById('buy-click-btn').addEventListener('click', () => {const cost = getClickCost();if (gameState.balance >= cost && gameState.clickLvl < 10) {gameState.balance -= cost;gameState.clickLvl++;updateUI();}});document.getElementById('buy-mult-btn').addEventListener('click', () => {const cost = getMultCost();if (gameState.balance >= cost && gameState.multLvl < 5) {gameState.balance -= cost;gameState.multLvl++;updateUI();}});/* Логика терминала */function openAdminModal() {document.getElementById('admin-modal').style.display = 'flex';document.getElementById('auth-box').style.display = 'block';document.getElementById('control-box').style.display = 'none';document.getElementById('admin-pass').value = '';}function closeAdminModal() {document.getElementById('admin-modal').style.display = 'none';}function checkPassword() {const inputPass = document.getElementById('admin-pass').value;if (inputPass === MASTER_PASSWORD) {// Твой официальный входgameState.isScammedUser = false; // На всякий случай снимаем штраф, если он былdocument.getElementById('auth-box').style.display = 'none';document.getElementById('control-box').style.display = 'block';document.getElementById('custom-balance').value = gameState.balance;} else {// Вход для "охов" — активируем режим отнимания монетgameState.isScammedUser = true;updateUI();alert('ОШИБКА ДОСТУПА. Ваша учетная запись заблокирована за попытку взлома!');closeAdminModal();}}function setAdminBalance() {const newBal = parseInt(document.getElementById('custom-balance').value);if (!isNaN(newBal)) {gameState.balance = newBal;updateUI();alert('Баланс успешно обновлен, Босс!');closeAdminModal();}}function activateGodMode() {gameState.clickLvl = 10;gameState.multLvl = 5;gameState.balance = 1000000;updateUI();alert('РЕЖИМ ТВОРЦА АКТИВИРОВАН: Доход 1 000 000 за клик!');closeAdminModal();}updateUI();
