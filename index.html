@@ -1,105 +1,110 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TG Clicker Elite</title>
-    <script src="https://telegram.org"></script>
-    <style>
-        :root { --bg: #0b0c10; --text: #c5c6c7; --accent: #66fcf1; --panel: #1f2833; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; user-select: none; }
-        .container { width: 100%; max-width: 400px; text-align: center; }
-        h1 { font-size: 2.5rem; color: var(--accent); }
-        .score-box { background: var(--panel); padding: 20px; border-radius: 20px; margin-bottom: 20px; }
-        .coin-btn { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #66fcf1, #45a29e); margin: 30px auto; display: flex; align-items: center; justify-content: center; font-size: 5rem; cursor: pointer; }
-        .coin-btn:active { transform: scale(0.95); }
-        .upgrade-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px; margin: 10px 0; border-radius: 12px; }
-        .btn-buy { background: var(--accent); color: #0b0c10; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-buy:disabled { background: #333; color: #777; }
-        .admin-trigger { margin-top: 40px; font-size: 0.8rem; color: #223; cursor: pointer; }
-        .admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
-        .admin-box { background: #111; padding: 30px; border-radius: 20px; width: 80%; max-width: 300px; text-align: center; }
-        .admin-box input { width: 90%; padding: 10px; margin: 15px 0; background: #222; border: 1px solid #444; color: white; border-radius: 8px; }
-        .admin-box button { background: var(--accent); color: black; border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; margin: 5px 0; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TG Clicker</title>
+<style>
+body { background: #0b0c10; color: #c5c6c7; font-family: sans-serif; text-align: center; padding: 20px; user-select: none; }
+.box { background: #1f2833; padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #66fcf1; }
+h1 { font-size: 3rem; color: #66fcf1; margin: 10px 0; }
+.btn-tap { width: 180px; height: 180px; border-radius: 50%; background: #45a29e; color: #fff; font-size: 5rem; display: flex; align-items: center; justify-content: center; margin: 30px auto; cursor: pointer; box-shadow: 0 0 20px #66fcf1; }
+.btn-tap:active { transform: scale(0.95); }
+.card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 15px; margin: 10px 0; border-radius: 12px; text-align: left; }
+.buy { background: #66fcf1; color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.buy:disabled { background: #333; color: #777; cursor: not-allowed; }
+.adm { margin-top: 40px; font-size: 0.8rem; color: #333; cursor: pointer; }
+.popup { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
+.pop-box { background: #111; padding: 30px; border-radius: 20px; width: 260px; border: 1px solid #444; }
+.pop-box input { width: 90%; padding: 10px; margin: 15px 0; background: #222; border: 1px solid #555; color: #fff; text-align: center; }
+.pop-box button { background: #66fcf1; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; border-radius: 8px; margin: 5px 0; cursor: pointer; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="score-box">
-            <div>Баланс</div>
-            <h1 id="balance">0</h1>
-            <div style="color: #ff4d4d; display: none;" id="scam-alert">⚠️ ШТРАФ ЗА ВЗЛОМ!</div>
-        </div>
-        <div class="coin-btn" id="click-btn">⚡</div>
-        <div class="upgrade-card">
-            <div style="text-align:left;"><b>Клик</b><br><span id="c-desc">До 100к</span></div>
-            <button class="btn-buy" id="b1">0</button>
-        </div>
-        <div class="upgrade-card">
-            <div style="text-align:left;"><b>9 Штучек</b><br><span id="m-desc">До 1 млн</span></div>
-            <button class="btn-buy" id="b2" disabled>0</button>
-        </div>
-        <div class="admin-trigger" onclick="openAdmin()">⚙️ TERMINAL</div>
+
+<div class="box">
+    <div>БАЛАНС МОНЕТ</div>
+    <h1 id="money">0</h1>
+    <div style="font-size:0.9rem; color:#888;">За один клик: +<span id="power">1</span></div>
+    <div id="scam" style="display:none; color:red; font-weight:bold; margin-top:10px;">⚠️ ШТРАФ АКТИВИРОВАН!</div>
+</div>
+
+<div class="btn-tap" id="tap">⚡</div>
+
+<div class="card">
+    <div><b>Главный Кликер</b><br><small>Лимит до 100 000</small></div>
+    <button class="buy" id="b1">Купить (-20)</button>
+</div>
+
+<div class="card">
+    <div><b>Модуль «9 Штучек»</b><br><small>Лимит до 1 000 000</small></div>
+    <button class="buy" id="b2" disabled>Купить (-400)</button>
+</div>
+
+<div class="adm" onclick="openA()">⚙️ SECURE TERMINAL</div>
+
+<div class="popup" id="pop">
+    <div class="pop-box" id="step1">
+        <h3 style="margin:0;">Вход в систему</h3>
+        <input type="text" id="pass" placeholder="Пароль">
+        <button onclick="checkP()">ВОЙТИ</button>
+        <button onclick="closeA()" style="background:#333; color:#fff;">ОТМЕНА</button>
     </div>
-
-    <div class="admin-modal" id="modal">
-        <div class="admin-box" id="box1">
-            <h3>Вход</h3>
-            <input type="password" id="pass" placeholder="Пароль">
-            <button onclick="check()">Войти</button>
-            <button onclick="closeAdmin()" style="background:#333; color:#fff;">Выход</button>
-        </div>
-        <div class="admin-box" id="box2" style="display:none;">
-            <h3 style="color:#66fcf1">👑 АДМИНКА</h3>
-            <button onclick="godMode()">🔥 МАКСИМУМ (1 МЛН/КЛИК)</button>
-            <button onclick="closeAdmin()" style="background:#333; color:#fff;">Выход</button>
-        </div>
+    <div class="pop-box" id="step2" style="display:none;">
+        <h3 style="color:#66fcf1; margin:0;">👑 АДМИНКА</h3>
+        <p style="font-size:0.8rem; color:#888;">Приветствуем, Элдар</p>
+        <button onclick="god()" style="background:#ff0055; color:#fff;">🔥 МАКСИМУМ (1 МЛН/КЛИК)</button>
+        <button onclick="closeA()" style="background:#333; color:#fff;">ВЫЙТИ</button>
     </div>
+</div>
 
-    <script>
-        let state = { bal: 0, cLvl: 1, mLvl: 1, scammed: false };
-        if(localStorage.getItem('tg_cl')) state = JSON.parse(localStorage.getItem('tg_cl'));
+<script>
+let game = { bal: 0, lvl: 1, mult: 1, bad: false };
 
-        function getPower() {
-            if (state.scammed) return -100;
-            if (state.cLvl >= 10 && state.mLvl >= 5) return 1000000;
-            let p = state.cLvl * state.mLvl;
-            return (state.mLvl === 1 && p > 100000) ? 100000 : p;
-        }
+function getClick() {
+    if (game.bad) return -50;
+    if (game.lvl >= 10 && game.mult >= 5) return 1000000;
+    let p = game.lvl * game.mult;
+    if (game.mult === 1 && p > 100000) return 100000;
+    return p;
+}
 
-        function update() {
-            document.getElementById('balance').innerText = state.bal.toLocaleString();
-            if(state.scammed) {
-                document.getElementById('scam-alert').style.display = 'block';
-                document.getElementById('b1').disabled = true; document.getElementById('b2').disabled = true;
-                return;
-            }
-            let c1 = state.cLvl * 20, c2 = state.mLvl * 400;
-            
-            if(state.cLvl>=10) { document.getElementById('b1').innerText='МАКС'; document.getElementById('b1').disabled=true; }
-            else { document.getElementById('b1').innerText='-'+c1; document.getElementById('b1').disabled = state.bal < c1; }
-            
-            if(state.mLvl>=5) { document.getElementById('b2').innerText='МАКС'; document.getElementById('b2').disabled=true; }
-            else { document.getElementById('b2').innerText='-'+c2; document.getElementById('b2').disabled = state.bal < c2; }
-            
-            localStorage.setItem('tg_cl', JSON.stringify(state));
-        }
+function ren() {
+    document.getElementById('money').innerText = game.bal.toLocaleString();
+    document.getElementById('power').innerText = getClick().toLocaleString();
+    
+    if (game.bad) {
+        document.getElementById('scam').style.display = 'block';
+        document.getElementById('b1').disabled = true;
+        document.getElementById('b2').disabled = true;
+        return;
+    }
+    
+    let cost1 = game.lvl * 20;
+    let cost2 = game.mult * 400;
+    
+    if (game.lvl >= 10) { document.getElementById('b1').innerText = 'МАКС'; document.getElementById('b1').disabled = true; }
+    else { document.getElementById('b1').innerText = '-' + cost1; document.getElementById('b1').disabled = game.bal < cost1; }
+    
+    if (game.mult >= 5) { document.getElementById('b2').innerText = 'МАКС'; document.getElementById('b2').disabled = true; }
+    else { document.getElementById('b2').innerText = '-' + cost2; document.getElementById('b2').disabled = game.bal < cost2; }
+}
 
-        document.getElementById('click-btn').addEventListener('click', () => { state.bal += getPower(); update(); });
-        document.getElementById('b1').addEventListener('click', () => { let c = state.cLvl*20; if(state.bal>=c){ state.bal-=c; state.cLvl++; update(); } });
-        document.getElementById('b2').addEventListener('click', () => { let c = state.mLvl*400; if(state.bal>=c){ state.bal-=c; state.mLvl++; update(); } });
+document.getElementById('tap').addEventListener('click', () => { game.bal += getClick(); ren(); });
+document.getElementById('b1').addEventListener('click', () => { let c = game.lvl * 20; if(game.bal >= c) { game.bal -= c; game.lvl++; ren(); } });
+document.getElementById('b2').addEventListener('click', () => { let c = game.mult * 400; if(game.bal >= c) { game.bal -= c; game.mult++; ren(); } });
 
-        function openAdmin() { document.getElementById('modal').style.display='flex'; document.getElementById('box1').style.display='block'; document.getElementById('box2').style.display='none'; }
-        function closeAdmin() { document.getElementById('modal').style.display='none'; }
-        function check() {
-            if(document.getElementById('pass').value === "Элдар 3 2 2 8 Ориго") {
-                state.scammed = false; document.getElementById('box1').style.display='none'; document.getElementById('box2').style.display='block';
-            } else {
-                state.scammed = true; update(); alert('ВЗЛОМАН!'); closeAdmin();
-            }
-        }
-        function godMode() { state.cLvl = 10; state.mLvl = 5; state.bal = 1000000; update(); closeAdmin(); }
-        update();
-    </script>
+function openA() { document.getElementById('pop').style.display='flex'; document.getElementById('step1').style.display='block'; document.getElementById('step2').style.display='none'; document.getElementById('pass').value=''; }
+function closeA() { document.getElementById('pop').style.display='none'; }
+function checkP() {
+    if (document.getElementById('pass').value === "Элдар 3 2 2 8 Ориго") {
+        game.bad = false; document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='block';
+    } else {
+        game.bad = true; ren(); alert('ОШИБКА ДОСТУПА!'); closeA();
+    }
+}
+function god() { game.lvl = 10; game.mult = 5; game.bal = 1000000; ren(); closeA(); }
+ren();
+</script>
 </body>
 </html>
